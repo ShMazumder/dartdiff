@@ -38,21 +38,25 @@ def compare_directories(old_dir, new_dir, output_csv="diff_report.csv"):
         if new_path.exists():
             diff = compare_files(old_path, new_path)
             if diff:
-                results.append([str(old_path), str(new_path), str(file), "Modification", f"{len(diff)} lines changed"])
+                ask_ai(old_path, new_path)
+                results.append([str(old_path), str(new_path), str(file), "Modification", f"{len(diff)} lines changed", diff])
         else:
-            results.append([str(old_path), "N/A", str(file), "Removal", "File removed in new version"])
+            results.append([str(old_path), "N/A", str(file), "Removal", "File removed in new version", ''])
 
     # Check for additions
     for file in new_files - old_files:
-        results.append(["N/A", str(new_dir / file), str(file), "Addition", "New file added"])
+        results.append(["N/A", str(new_dir / file), str(file), "Addition", "New file added", ''])
 
     # Write to CSV
     with open(output_csv, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(["Old Version", "New Version", "File", "Category of Change", "Description"])
+        writer.writerow(["Old Version", "New Version", "File", "Category of Change", "Description", 'Diff'])
         writer.writerows(results)
 
     print(f"[✓] Report saved to {output_csv}")
+
+def ask_ai():
+    return ''
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compare two versions of a package.")
