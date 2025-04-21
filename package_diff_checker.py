@@ -6,6 +6,19 @@ from pathlib import Path
 import argparse
 import csv
 
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# Load environment variables
+load_dotenv("./env")
+
+# Initialize Azure OpenAI client
+client = OpenAI(
+    base_url="https://models.inference.ai.azure.com",
+    api_key=os.getenv("GITHUB_TOKEN"),
+)
+
+
 def compare_files(file1, file2):
     with open(file1, 'r', encoding='utf-8') as f1, open(file2, 'r', encoding='utf-8') as f2:
         lines1 = f1.readlines()
